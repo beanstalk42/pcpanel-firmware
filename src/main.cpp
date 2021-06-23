@@ -50,6 +50,12 @@ void printButtonValue(uint8_t pin, int dial) {
 }
 
 int count = 0;
+void sendPong() {
+    if(++count % 15 == 0) {
+        // send "pong" every ~1.5s
+        Serial.println("pong");
+    }
+}
 
 void loop() {
     printDialValue(DIAL0, 0);
@@ -62,8 +68,6 @@ void loop() {
     printButtonValue(BUTTON2, 2);
     printButtonValue(BUTTON3, 3);
 
+    sendPong();
     delay(100);
-    if (count++ % 15 == 0) {
-        Serial.println("pong");
-    }
 }

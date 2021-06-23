@@ -23,8 +23,8 @@ void setup() {
     pinMode(BUTTON3, INPUT_PULLUP);
 }
 
+void sendDialValue(uint8_t pin, int dial) {
 
-void printDialValue(uint8_t pin, int dial) {
     int value = 1024 - analogRead(pin);
     Serial.print("v");
     Serial.print(dial);
@@ -35,10 +35,9 @@ void printDialValue(uint8_t pin, int dial) {
 
 int buttonLastValue[4] = {0, 0, 0, 0};
 
-void printButtonValue(uint8_t pin, int dial) {
+void sendButtonValue(uint8_t pin, int dial) {
     int value = digitalRead(pin);
     if(buttonLastValue[dial] == value) {
-        // no change
         return;
     }
     buttonLastValue[dial] = value;
@@ -58,15 +57,15 @@ void sendPong() {
 }
 
 void loop() {
-    printDialValue(DIAL0, 0);
-    printDialValue(DIAL1, 1);
-    printDialValue(DIAL2, 2);
-    printDialValue(DIAL3, 3);
+    sendDialValue(DIAL0, 0);
+    sendDialValue(DIAL1, 1);
+    sendDialValue(DIAL2, 2);
+    sendDialValue(DIAL3, 3);
 
-    printButtonValue(BUTTON0, 0);
-    printButtonValue(BUTTON1, 1);
-    printButtonValue(BUTTON2, 2);
-    printButtonValue(BUTTON3, 3);
+    sendButtonValue(BUTTON0, 0);
+    sendButtonValue(BUTTON1, 1);
+    sendButtonValue(BUTTON2, 2);
+    sendButtonValue(BUTTON3, 3);
 
     sendPong();
     delay(100);

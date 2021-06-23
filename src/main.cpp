@@ -10,6 +10,10 @@
 #define BUTTON2 PD3
 #define BUTTON3 PD2
 
+// the range of the dial seems to go from [14, 1023]
+#define MIN_DIAL_VALUE 14.0
+#define MAX_DIAL_VALUE 1023.0
+
 int dialLastValue[4] = {0, 0, 0, 0};
 int buttonLastValue[4] = {0, 0, 0, 0};
 
@@ -26,17 +30,23 @@ void setup() {
     pinMode(BUTTON3, INPUT_PULLUP);
 }
 
+int scaleDialValue(int value) {
+    // scale from 1-100
+    auto v = (double) value;
+    return (int) ((1.0 - (v - MIN_DIAL_VALUE) / (MAX_DIAL_VALUE-MIN_DIAL_VALUE)) * 100);
+}
+
 void sendDialValue(uint8_t pin, int dial) {
+    int value = analogRead(pin);
     if(dialLastValue[dial] == value) {
         return;
     }
     dialLastValue[dial] = value;
 
-    int value = 1024 - analogRead(pin);
     Serial.print("v");
     Serial.print(dial);
     Serial.print("x");
-    Serial.println(value/10);
+    Serial.println(scaleDialValue(value));
 }
 
 void sendButtonValue(uint8_t pin, int dial) {

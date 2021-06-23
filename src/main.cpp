@@ -10,6 +10,9 @@
 #define BUTTON2 PD3
 #define BUTTON3 PD2
 
+int dialLastValue[4] = {0, 0, 0, 0};
+int buttonLastValue[4] = {0, 0, 0, 0};
+
 void setup() {
     Serial.begin(9600);
     pinMode(DIAL0, INPUT_PULLUP);
@@ -24,6 +27,10 @@ void setup() {
 }
 
 void sendDialValue(uint8_t pin, int dial) {
+    if(dialLastValue[dial] == value) {
+        return;
+    }
+    dialLastValue[dial] = value;
 
     int value = 1024 - analogRead(pin);
     Serial.print("v");
@@ -31,9 +38,6 @@ void sendDialValue(uint8_t pin, int dial) {
     Serial.print("x");
     Serial.println(value/10);
 }
-
-
-int buttonLastValue[4] = {0, 0, 0, 0};
 
 void sendButtonValue(uint8_t pin, int dial) {
     int value = digitalRead(pin);
